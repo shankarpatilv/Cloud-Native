@@ -74,7 +74,7 @@ resource "aws_secretsmanager_secret" "sendgrid_api_key" {
 resource "aws_secretsmanager_secret_version" "sendgrid_api_key_version" {
   secret_id = aws_secretsmanager_secret.sendgrid_api_key.id
   secret_string = jsonencode({
-    api_key = "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"
+    api_key = "***********************"
   })
 }
 
