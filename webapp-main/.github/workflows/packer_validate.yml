@@ -1,0 +1,45 @@
+name: Packer Template Validation
+run-name: Checking Packer template format and validation
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  packer-validation-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      
+      - name: Install Packer
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          
+          sudo apt-get update
+          sudo apt-get install -y packer
+
+      - name: Package application
+        run: |
+          mkdir artifact
+          cp -r src webapp/
+          cp app.py webapp/
+          cp requirements.txt webapp/
+          cp README.md webapp/
+          zip -r webapp.zip webapp/
+
+      - name: Initialize Packer
+        run: |
+          cd packer
+          packer init .
+
+      - name: Packer fmt and validate
+        id: fmt
+        run: |
+          cd packer
+          if ! packer fmt -check . ; then
+              exit 1
+          fi
+          packer validate .

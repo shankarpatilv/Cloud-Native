@@ -1,0 +1,25 @@
+name: fmt_check
+run-name: Cheking terraform fmt
+on:
+  pull_request:
+    branches:
+      - main
+
+      
+jobs:
+  pull_request-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform fmt
+        id: fmt
+        run: |
+          if ! terraform fmt -check; then
+              exit 1
+          fi
+      - name: Terraform Init
+        run: terraform init -no-color
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color

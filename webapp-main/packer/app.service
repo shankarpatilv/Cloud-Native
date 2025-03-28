@@ -1,0 +1,20 @@
+[Unit]
+Description=Flask Web Application
+After=network.target 
+
+[Service]
+Type=simple
+User=csye6225
+Group=csye6225
+WorkingDirectory=/opt/webapp
+ExecStart=/opt/webapp/venv/bin/flask run --host=0.0.0.0 --port=5000
+Environment="FLASK_APP=app.py"
+EnvironmentFile=/opt/webapp/.env
+StandardOutput=file:/opt/webapp/logs/app.log
+StandardError=file:/opt/webapp/logs/app.log
+SyslogIdentifier=csye6225
+
+[Install]
+WantedBy=multi-user.target
+
+
